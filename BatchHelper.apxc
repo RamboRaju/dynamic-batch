@@ -1,0 +1,37 @@
+public class BatchHelper {
+
+    public static  String dateString;
+    public static List<sObject> checkDate(List<sObject> courseList){
+        System.debug('from method === '+courseList);
+        List<sObject> updatedCourse = new List<sObject>();
+        for(sObject thisCourses : courseList){
+            if(String.valueOf(thisCourses.get('Available_Intakes__c')) <> null){
+               dateString = dateSplitter(String.valueOf(thisCourses.get('Available_Intakes__c')));
+               thisCourses.put('Available_Intakes__c',dateString);
+               updatedCourse.add(thisCourses);
+            }                  
+        }
+        
+        return updatedCourse;
+    }
+    
+    public static String dateSplitter(String availableIntakes){
+        List<String> parts = availableIntakes.split(',');
+        String updateavailableIntakes = '';
+        for(String dates : parts){
+            System.debug('dates from dateSplitter ===' +dates);
+            if(dates <> null){
+                Date dt = Date.parse(dates);
+                if(dt > Date.today()){
+                    if(updateavailableIntakes == ''){
+                        updateavailableIntakes = dates;
+                    }else{
+                        updateavailableIntakes += ','+dates;
+                    }                
+                }
+            }
+        }
+        
+        return updateavailableIntakes;
+    }
+}
