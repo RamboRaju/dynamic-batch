@@ -1,0 +1,24 @@
+global class UpdateAvailableIntakes implements Database.Batchable<sObject>, Database.Stateful {
+    
+    private String objectToUpadte;
+    global UpdateAvailableIntakes(String objectName){
+        objectToUpadte = objectName;
+    }
+    
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            'SELECT ID, Name, Available_Intakes__c FROM '+objectToUpadte        
+        );
+    }
+    
+    global void execute(Database.BatchableContext bc, List<sObject> scope){
+        List<sObject> updateSobject = new List<sObject>();
+        updateSobject = BatchHelper.checkDate(scope);
+        update updateSobject;
+    }
+    
+     global void finish(Database.BatchableContext bc){
+        
+    }    
+
+}
